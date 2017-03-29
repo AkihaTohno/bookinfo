@@ -31,6 +31,7 @@ namespace bookinfo
         public string seriesTitle { get; set; }
         public string Publisher { get; set; }
         public string Volume { get; set; }
+        public string BookIndex { get; set; }
     }
     public partial class MainWindow : Window
     {
@@ -63,17 +64,21 @@ namespace bookinfo
             bookinfo.Auther = booksearchElement.Element(dc + "creator").Value;
             bookinfo.Title = booksearchElement.Element(dc + "title").Value;
             bookinfo.TitleTrans = booksearchElement.Element(dcndl + "titleTranscription").Value;
-            bookinfo.seriesTitle = booksearchElement.Element(dcndl + "seriesTitle").Value;
+            if(booksearchElement.Element(dcndl + "seriesTitle") != null)
+            {
+                bookinfo.seriesTitle = booksearchElement.Element(dcndl + "seriesTitle").Value;
+            }
             bookinfo.ISBN = isbn;
             bookinfo.Publisher = booksearchElement.Element(dc + "publisher").Value;
-            if(booksearchElement.Element(dc + "volume") != null)
+            if(booksearchElement.Element(dcndl + "volume") != null)
             {
-                bookinfo.Volume = booksearchElement.Element(dc + "volume").Value;
-            }
-            else
+                bookinfo.Volume = booksearchElement.Element(dcndl + "volume").Value;
+                bookinfo.BookIndex = booksearchElement.Element(dc + "title").Value + " " + booksearchElement.Element(dcndl + "volume").Value;
+            }else
             {
-                bookinfo.Volume = "0";
+                bookinfo.BookIndex = booksearchElement.Element(dc + "title").Value;
             }
+
             using (var ms = new MemoryStream())
             using (var sr = new StreamReader(ms))
             {
